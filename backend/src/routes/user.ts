@@ -2,12 +2,14 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
+import {SignupInput , SigninInput} from "@ishan100x/medium-common";
+
 
 export const userRouter = new Hono<{
-    Bindings: {
-        DATABASE_URL: string;
-        JWT_SECRET: string;
-    }
+  Bindings: {
+      DATABASE_URL: string;
+      JWT_SECRET: string;
+  }
 }>();
 
 userRouter.post('/signup', async (c) => {
@@ -16,7 +18,14 @@ userRouter.post('/signup', async (c) => {
     }).$extends(withAccelerate());
   
     const body = await c.req.json();
-  
+    const {success} = SignupInput.safeParse(body);
+    if(!success) {
+    c.status(411);
+
+     return c.json({
+     message:"Inputs are incorrecrS"
+    }) 
+  }
     const user = await prisma.user.create({
       data: {
         email: body.email,
@@ -33,15 +42,23 @@ userRouter.post('/signup', async (c) => {
   
 userRouter.post('/signin', async (c) => {
     const prisma = new PrismaClient({
-    //@ts-ignore
         datasourceUrl: c.env?.DATABASE_URL	,
     }).$extends(withAccelerate());
 
     const body = await c.req.json();
+    const {success} = SigninInput.safeParse(body);
+    if(!success) {
+    c.status(411);
+    return c.json({
+      message:"Inputs are incorrecrS"
+    })
+    }
+
+
     const user = await prisma.user.findUnique({
         where: {
             email: body.email,
-    password: body.password
+            password: body.password
         }
     });
 
