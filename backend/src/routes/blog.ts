@@ -107,9 +107,8 @@ blogRouter.use('/*', async (c, next) => {
         }
     });
     return c.json({
-        posts: post
+        post
     })
-
    })
 
 
@@ -126,6 +125,16 @@ blogRouter.use('/*', async (c, next) => {
             where:{
                 id:id
             },
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                author: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
         })
     
         return c.json({
