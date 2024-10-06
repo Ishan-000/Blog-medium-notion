@@ -1,15 +1,15 @@
 import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
-import { useBlogs } from "../hooks";
+import { usePosts } from "../hooks";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 
-export const Blogs = () => {
-    const { loading, blogs } = useBlogs();
+export const Posts = () => {
+    const { loading, posts } = usePosts();
 
     if (loading) {
         return <div>
             <Appbar /> 
-            <div className="flex justify-center">
+            <div  className="flex justify-center">
                 <div>
                     <BlogSkeleton />
                     <BlogSkeleton />
@@ -21,25 +21,19 @@ export const Blogs = () => {
         </div>
     }
 
+
     return <div>
-        <Appbar />
-        <div className="flex justify-center">
-            <div>
-                {blogs && blogs.length > 0 ? (
-                    blogs.map(blog => (
-                        <BlogCard
-                            key={(blog.id)} // Convert to string
-                            id={String(blog.id)}  // Convert to string
-                            authorName={blog.author.name || "Anonymous"}
-                            title={blog.title}
-                            content={blog.content}
-                            publishedDate={"2nd Feb 2024"}
-                        />
-                    ))
-                ) : (
-                    <p>No blogs found.</p>
-                )}
-            </div>
+    <Appbar />
+    <div  className="flex justify-center">
+        <div>
+            {posts.map(post => <BlogCard
+                id={String(post.id)} // Convert id to string
+                authorName={post.author.name || "Anonymous"}
+                title={post.title}
+                content={post.content}
+                publishedDate={"2nd Feb 2024"}
+            />)}
         </div>
     </div>
+</div>
 }

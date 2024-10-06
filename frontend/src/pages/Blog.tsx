@@ -1,17 +1,17 @@
 import { Appbar } from "../components/Appbar";
 import { FullBlog } from "../components/FullBlog";
 import { Spinner } from "../components/Spinner";
-import { useBlog } from "../hooks";
+import { usePost } from "../hooks";
 import {useParams} from "react-router-dom";
 
 // atomFamilies/selectorFamilies
-export const Blog = () => {
+export const Post = () => {
     const { id } = useParams();
-    const {loading, blog} = useBlog({
+    const {loading, post} = usePost({
         id: id || ""
     });
 
-    if (loading || !blog) {
+    if (loading || !post) {
         return <div>
             <Appbar />
         
@@ -24,6 +24,6 @@ export const Blog = () => {
         </div>
     }
     return <div>
-        <FullBlog blog={blog} />
+        <FullBlog post={post} />
     </div>
 }
